@@ -2,10 +2,12 @@ package services
 
 import (
 	"errors"
+	"time"
+
+	"github.com/SthiraPs/DeliveryApp/dto"
 	"github.com/SthiraPs/DeliveryApp/models"
 	"github.com/SthiraPs/DeliveryApp/repository"
 	"github.com/SthiraPs/DeliveryApp/utils"
-	"time"
 )
 
 func SignInUserService(credentials models.User) (string, error) {
@@ -39,11 +41,11 @@ func CreateUserService(user models.User) error {
 	return repository.CreateUserRepo(user)
 }
 
-func GetAllUsersService() ([]models.User, error) {
+func GetAllUsersService() ([]dto.UserDTO, error) {
 	return repository.GetAllUsersRepo()
 }
 
-func GetUserByIdService(id int) (models.User, error) {
+func GetUserByIdService(id int) (dto.UserDTO, error) {
 	return repository.GetUserByIdRepo(id)
 }
 

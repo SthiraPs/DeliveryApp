@@ -1,11 +1,10 @@
 package services
 
 import (
-	"time"
-
 	"github.com/SthiraPs/DeliveryApp/models"
 	"github.com/SthiraPs/DeliveryApp/repository"
 	"github.com/SthiraPs/DeliveryApp/utils"
+	"time"
 )
 
 func CreateDriverService(driver models.Driver) error {
@@ -13,7 +12,9 @@ func CreateDriverService(driver models.Driver) error {
 	if err != nil {
 		return err
 	}
+
 	driver.Password = hashedPassword
+	driver.StatusId = 4 //Initially set to inactive
 	driver.CreatedAt = time.Now()
 	driver.UpdatedAt = time.Now()
 

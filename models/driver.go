@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Driver struct {
-	ID            uint      `json:"id" gorm:"primaryKey"`
+	ID            uint      `json:"id" gorm:"primaryKey" swaggerignore:"true"`
 	FirstName     string    `json:"firstName"`
 	LastName      string    `json:"lastName"`
 	Email         string    `json:"email" gorm:"unique"`

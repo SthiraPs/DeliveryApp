@@ -33,6 +33,27 @@ func SetupRouter() *gin.Engine {
 		api.GET("/driver/:id", controllers.GetDriverByIdController)
 		api.PUT("/driver/:id", controllers.UpdateDriverByIdController)
 		api.DELETE("/driver/:id", controllers.DeleteDriverByIdController)
+
+		// ProductCategory routes
+		api.POST("/productCategory", controllers.CreateProductCategoryController)
+		api.GET("/productCategories", controllers.GetAllProductCategoriesController)
+		api.GET("/productCategory/:id", controllers.GetProductCategoryByIdController)
+		api.PUT("/productCategory/:id", controllers.UpdateProductCategoryByIdController)
+		api.DELETE("/productCategory/:id", controllers.DeleteProductCategoryByIdController)
+
+		// Product routes
+		api.POST("/product", controllers.CreateProductController)
+		api.GET("/products", controllers.GetAllProductsController)
+		api.GET("/product/:id", controllers.GetProductByIdController)
+		api.PUT("/product/:id", controllers.UpdateProductByIdController)
+		api.DELETE("/product/:id", controllers.DeleteProductByIdController)
+
+		// Order routes
+		api.POST("/order", controllers.CreateOrderController)
+		api.GET("/orders", controllers.GetAllOrdersController)
+		api.GET("/order/:id", controllers.GetOrderByIdController)
+		api.PUT("/order/:id", controllers.UpdateOrderByIdController)
+		api.DELETE("/order/:id", controllers.DeleteOrderByIdController)
 	}
 
 	// GraphQL handler

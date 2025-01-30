@@ -7,8 +7,6 @@ definitions:
         type: string
       firstName:
         type: string
-      id:
-        type: integer
       lastName:
         type: string
       licenceNo:
@@ -22,6 +20,56 @@ definitions:
       vehicleRegNo:
         type: string
       vehicleTypeId:
+        type: integer
+    type: object
+  models.Order:
+    properties:
+      orderItems:
+        items:
+          $ref: '#/definitions/models.OrderItem'
+        type: array
+      statusId:
+        type: integer
+      totalAmount:
+        type: number
+      userId:
+        type: integer
+    type: object
+  models.OrderItem:
+    properties:
+      id:
+        type: integer
+      orderId:
+        type: integer
+      price:
+        type: number
+      productId:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  models.Product:
+    properties:
+      categoryId:
+        type: integer
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      statusId:
+        type: integer
+      stockQty:
+        type: integer
+    type: object
+  models.ProductCategory:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      statusId:
         type: integer
     type: object
   models.SignInRequest:
@@ -40,8 +88,6 @@ definitions:
         type: string
       firstName:
         type: string
-      id:
-        type: integer
       lastName:
         type: string
       password:
@@ -215,6 +261,471 @@ paths:
       summary: Get list of drivers
       tags:
       - drivers
+  /api/order:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new order to the database, including associated order items
+      parameters:
+      - description: Order data
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/models.Order'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Order created successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new order
+      tags:
+      - orders
+  /api/order/{id}:
+    delete:
+      description: Deletes an order by ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Order deleted successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Order not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete an order
+      tags:
+      - orders
+    get:
+      description: Returns an order by its ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get order by ID
+      tags:
+      - orders
+    put:
+      consumes:
+      - application/json
+      description: Updates order information by ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated order data
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/models.Order'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order updated successfully
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Order not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update an order
+      tags:
+      - orders
+  /api/orders:
+    get:
+      description: Returns all orders from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get list of orders
+      tags:
+      - orders
+  /api/product:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new product to the database
+      parameters:
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Product created successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new product
+      tags:
+      - products
+  /api/product/{id}:
+    delete:
+      description: Deletes a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Product deleted successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Product not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a product
+      tags:
+      - products
+    get:
+      description: Returns a product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get product by ID
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Updates product information by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product updated successfully
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Product not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a product
+      tags:
+      - products
+  /api/productCategories:
+    get:
+      description: Returns all product categories from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductCategory'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get list of product categories
+      tags:
+      - productCategories
+  /api/productCategory:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new product category to the database
+      parameters:
+      - description: ProductCategory data
+        in: body
+        name: productCategory
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductCategory'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: ProductCategory created successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new product category
+      tags:
+      - productCategories
+  /api/productCategory/{id}:
+    delete:
+      description: Deletes a product category by ID
+      parameters:
+      - description: Product Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Product category deleted successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Product category not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a product category
+      tags:
+      - productCategories
+    get:
+      description: Returns a product category by its ID
+      parameters:
+      - description: Product Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get product category by ID
+      tags:
+      - productCategories
+    put:
+      consumes:
+      - application/json
+      description: Updates product category information by ID
+      parameters:
+      - description: Product Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated product category data
+        in: body
+        name: productCategory
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product category updated successfully
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Product category not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a product category
+      tags:
+      - productCategories
+  /api/products:
+    get:
+      description: Returns all products from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get list of products
+      tags:
+      - products
   /api/user/{id}:
     delete:
       description: Deletes a user by their ID
