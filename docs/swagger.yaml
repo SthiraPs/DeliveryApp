@@ -1,30 +1,193 @@
 definitions:
-  models.User:
+  models.Driver:
     properties:
-      created_at:
-        type: string
-      deleted_at:
-        description: Fix for Swag
-        type: string
+      branchId:
+        type: integer
       email:
+        type: string
+      firstName:
         type: string
       id:
         type: integer
-      name:
+      lastName:
         type: string
-      updated_at:
+      licenceNo:
         type: string
+      password:
+        type: string
+      phoneNo:
+        type: string
+      statusId:
+        type: integer
+      vehicleRegNo:
+        type: string
+      vehicleTypeId:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+      password:
+        type: string
+      phoneNo:
+        type: string
+      roleId:
+        type: integer
+      statusId:
+        type: integer
     type: object
 host: localhost:8081
 info:
   contact: {}
   description: This is a simple delivery app API
   title: Delivery App API
-  version: "1.0"
+  version: 1.0.0
 paths:
-  /api/users:
+  /api/driver:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new driver to the database
+      parameters:
+      - description: Driver data
+        in: body
+        name: driver
+        required: true
+        schema:
+          $ref: '#/definitions/models.Driver'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Driver created successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new driver
+      tags:
+      - drivers
+  /api/driver/{id}:
+    delete:
+      description: Deletes a driver by ID
+      parameters:
+      - description: Driver ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Driver deleted successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Driver not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a driver
+      tags:
+      - drivers
     get:
-      description: Returns all users from the database
+      description: Returns a driver by their ID
+      parameters:
+      - description: Driver ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Driver'
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get driver by ID
+      tags:
+      - drivers
+    put:
+      consumes:
+      - application/json
+      description: Updates driver information by ID
+      parameters:
+      - description: Driver ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated driver data
+        in: body
+        name: driver
+        required: true
+        schema:
+          $ref: '#/definitions/models.Driver'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Driver updated successfully
+          schema:
+            $ref: '#/definitions/models.Driver'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Driver not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a driver
+      tags:
+      - drivers
+  /api/drivers:
+    get:
+      description: Returns all drivers from the database
       produces:
       - application/json
       responses:
@@ -32,16 +195,17 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.User'
+              $ref: '#/definitions/models.Driver'
             type: array
         "500":
           description: Internal Server Error
           schema:
             additionalProperties: true
             type: object
-      summary: Get list of users
+      summary: Get list of drivers
       tags:
-      - users
+      - drivers
+  /api/user:
     post:
       consumes:
       - application/json
@@ -72,6 +236,128 @@ paths:
             additionalProperties: true
             type: object
       summary: Create a new user
+      tags:
+      - users
+  /api/user/{id}:
+    delete:
+      description: Deletes a user by their ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete user by ID
+      tags:
+      - users
+    get:
+      description: Get user details by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get user by ID
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update a user's details by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated user data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update user details
+      tags:
+      - users
+  /api/users:
+    get:
+      description: Returns all users from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get list of users
       tags:
       - users
 swagger: "2.0"

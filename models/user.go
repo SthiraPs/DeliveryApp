@@ -1,15 +1,20 @@
 package models
 
-import (
-	"time"
-)
+import "time"
 
-// User represents a user in the system
 type User struct {
-	ID        uint       `json:"id" gorm:"primaryKey"`
-	Name      string     `json:"name"`
-	Email     string     `json:"email" gorm:"unique"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `json:"deleted_at,omitempty" gorm:"index"` // Fix for Swag
+	ID        uint      `json:"id" gorm:"primaryKey"`
+	FirstName string    `json:"firstName" gorm:"not null"`
+	LastName  string    `json:"lastName"`
+	Email     string    `json:"email" gorm:"unique;not null"`
+	PhoneNo   string    `json:"phoneNo" gorm:"unique;not null"`
+	RoleId    uint      `json:"roleId" gorm:"not null"`
+	Password  string    `json:"password" gorm:"not null"`
+	StatusId  uint      `json:"statusId" gorm:"not null"`
+	CreatedAt time.Time `json:"createdAt" gorm:"not null" swaggerignore:"true"`
+	UpdatedAt time.Time `json:"updatedAt" gorm:"not null" swaggerignore:"true"`
+
+	// Foreign keys
+	Role   Role   `json:"role" gorm:"foreignKey:RoleId" swaggerignore:"true"`
+	Status Status `json:"status" gorm:"foreignKey:StatusId" swaggerignore:"true"`
 }
