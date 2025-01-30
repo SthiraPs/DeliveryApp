@@ -1,27 +1,38 @@
 package repository
 
 import (
+	"errors"
 	"github.com/SthiraPs/DeliveryApp/db"
 	"github.com/SthiraPs/DeliveryApp/models"
 )
 
-func CreateUser(user models.User) error {
+func SignInUserRepo(credentials models.User) (models.User, error) {
+	var user models.User
+	err := db.DB.Where("email = ?", credentials.Email).First(&user).Error
+	if err != nil {
+		return models.User{}, errors.New("invalid credentials. Please try again")
+	}
+
+	return user, nil // Successfully signed in
+}
+
+func CreateUserRepo(user models.User) error {
 	return db.DB.Create(&user).Error
 }
 
-func GetAllUsers() ([]models.User, error) {
+func GetAllUsersRepo() ([]models.User, error) {
 	var users []models.User
 	err := db.DB.Find(&users).Error
 	return users, err
 }
 
-func GetUserById(id int) (models.User, error) {
+func GetUserByIdRepo(id int) (models.User, error) {
 	var user models.User
 	err := db.DB.Where("id = ?", id).First(&user).Error
 	return user, err
 }
 
-func UpdateUserById(id int, updatedData models.User) (models.User, error) {
+func UpdateUserByIdRepo(id int, updatedData models.User) (models.User, error) {
 	var user models.User
 	err := db.DB.Where("id = ?", id).First(&user).Error
 	if err != nil {
@@ -35,7 +46,7 @@ func UpdateUserById(id int, updatedData models.User) (models.User, error) {
 	return user, nil
 }
 
-func DeleteUserById(id int) (models.User, error) {
+func DeleteUserByIdRepo(id int) (models.User, error) {
 	var user models.User
 	err := db.DB.Where("id = ?", id).First(&user).Error
 	if err != nil {

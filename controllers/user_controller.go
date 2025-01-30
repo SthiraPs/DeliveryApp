@@ -1,13 +1,44 @@
 package controllers
 
 import (
-	"net/http"
-	"strconv"
-
 	"github.com/SthiraPs/DeliveryApp/models"
 	"github.com/SthiraPs/DeliveryApp/services"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 )
+
+// SignInUser godoc
+// @Summary Authenticate a user
+// @Description Authenticates a user and returns a JWT token
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param credentials body models.SignInRequest true "User login data"
+// @Success 200 {object} map[string]interface{} "Successfully authenticated"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 401 {object} map[string]interface{} "Unauthorized"
+// @Router /api/user/signin [post]
+func SignInUserController(c *gin.Context) {
+	var credentials models.User
+	if err := c.ShouldBindJSON(&credentials); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+		return
+	}
+
+	// Authenticate user
+	token, err := services.SignInUserService(credentials)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Return JWT token
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User signed in successfully",
+		"token":   token,
+	})
+}
 
 // CreateUser godoc
 // @Summary Create a new user
@@ -19,8 +50,8 @@ import (
 // @Success 201 {object} map[string]interface{} "User created successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
-// @Router /api/user [post]
-func CreateUser(c *gin.Context) {
+// @Router /api/user/register [post]
+func CreateUserController(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -42,7 +73,7 @@ func CreateUser(c *gin.Context) {
 // @Success 200 {array} models.User
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/users [get]
-func GetAllUsers(c *gin.Context) {
+func GetAllUsersController(c *gin.Context) {
 	users, err := services.GetAllUsersService()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -61,7 +92,7 @@ func GetAllUsers(c *gin.Context) {
 // @Failure 400 {object} map[string]interface{} "Invalid ID"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/user/{id} [get]
-func GetUserById(c *gin.Context) {
+func GetUserByIdController(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
@@ -90,7 +121,7 @@ func GetUserById(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "User not found"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/user/{id} [put]
-func UpdateUserById(c *gin.Context) {
+func UpdateUserByIdController(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
@@ -103,7 +134,7 @@ func UpdateUserById(c *gin.Context) {
 		return
 	}
 
-	user, err := services.UpdateUserByIdServer(id, updatedUser)
+	user, err := services.UpdateUserByIdService(id, updatedUser)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -122,14 +153,14 @@ func UpdateUserById(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "User not found"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/user/{id} [delete]
-func DeleteUserById(c *gin.Context) {
+func DeleteUserByIdController(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
 
-	user, err := services.DeleteUserByIdServer(id)
+	user, err := services.DeleteUserByIdService(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

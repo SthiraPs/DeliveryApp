@@ -1,13 +1,11 @@
 package controllers
 
 import (
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/SthiraPs/DeliveryApp/models"
 	"github.com/SthiraPs/DeliveryApp/services"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 )
 
 // CreateDriver godoc
@@ -21,15 +19,12 @@ import (
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/driver [post]
-func CreateDriver(c *gin.Context) {
+func CreateDriverController(c *gin.Context) {
 	var driver models.Driver
 	if err := c.ShouldBindJSON(&driver); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	driver.CreatedAt = time.Now()
-	driver.UpdatedAt = time.Now()
 
 	if err := services.CreateDriverService(driver); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -46,7 +41,7 @@ func CreateDriver(c *gin.Context) {
 // @Success 200 {array} models.Driver
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/drivers [get]
-func GetAllDrivers(c *gin.Context) {
+func GetAllDriversController(c *gin.Context) {
 	drivers, err := services.GetAllDriversService()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -65,7 +60,7 @@ func GetAllDrivers(c *gin.Context) {
 // @Failure 400 {object} map[string]interface{} "Invalid ID"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/driver/{id} [get]
-func GetDriverById(c *gin.Context) {
+func GetDriverByIdController(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
@@ -93,7 +88,7 @@ func GetDriverById(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "Driver not found"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/driver/{id} [put]
-func UpdateDriverById(c *gin.Context) {
+func UpdateDriverByIdController(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
@@ -106,7 +101,7 @@ func UpdateDriverById(c *gin.Context) {
 		return
 	}
 
-	driver, err := services.UpdateDriverByIdServer(id, updatedDriver)
+	driver, err := services.UpdateDriverByIdService(id, updatedDriver)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -125,14 +120,14 @@ func UpdateDriverById(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "Driver not found"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /api/driver/{id} [delete]
-func DeleteDriverById(c *gin.Context) {
+func DeleteDriverByIdController(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
 
-	driver, err := services.DeleteDriverByIdServer(id)
+	driver, err := services.DeleteDriverByIdService(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

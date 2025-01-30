@@ -5,23 +5,23 @@ import (
 	"github.com/SthiraPs/DeliveryApp/models"
 )
 
-func CreateDriver(data models.Driver) error {
+func CreateDriverRepo(data models.Driver) error {
 	return db.DB.Create(&data).Error
 }
 
-func GetAllDrivers() ([]models.Driver, error) {
+func GetAllDriversRepo() ([]models.Driver, error) {
 	var drivers []models.Driver
 	err := db.DB.Find(&drivers).Error
 	return drivers, err
 }
 
-func GetDriverById(id int) (models.Driver, error) {
+func GetDriverByIdRepo(id int) (models.Driver, error) {
 	var driver models.Driver
 	err := db.DB.Where("id = ?", id).First(&driver).Error
 	return driver, err
 }
 
-func UpdateDriverById(id int, updatedData models.Driver) (models.Driver, error) {
+func UpdateDriverByIdRepo(id int, updatedData models.Driver) (models.Driver, error) {
 	var driver models.Driver
 	err := db.DB.Where("id = ?", id).First(&driver).Error
 	if err != nil {
@@ -35,7 +35,7 @@ func UpdateDriverById(id int, updatedData models.Driver) (models.Driver, error) 
 	return driver, nil
 }
 
-func DeleteDriverById(id int) (models.Driver, error) {
+func DeleteDriverByIdRepo(id int) (models.Driver, error) {
 	var driver models.Driver
 	err := db.DB.Where("id = ?", id).First(&driver).Error
 	if err != nil {

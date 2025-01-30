@@ -18,3 +18,9 @@ type User struct {
 	Role   Role   `json:"role" gorm:"foreignKey:RoleId" swaggerignore:"true"`
 	Status Status `json:"status" gorm:"foreignKey:StatusId" swaggerignore:"true"`
 }
+
+// Request structs for different endpoints
+type SignInRequest struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
