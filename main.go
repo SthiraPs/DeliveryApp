@@ -11,7 +11,7 @@ import (
 
 func init() {
 	// Load environment variables from .env file
-	err := godotenv.Load()
+	err := godotenv.Load("/Users/sithira/Developments/Main Projects/DeliveryApp/API/.env")
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
